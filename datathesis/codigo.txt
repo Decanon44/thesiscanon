@@ -1,0 +1,61 @@
+f = open("input.txt", "r")
+fout = open("output.txt", "a")
+lines = f.readlines()
+flag=0
+contlines=0
+fecha=""
+for line in lines:
+    if("                       ================= " in line):
+      flag=0
+      contlines=contlines+1
+    if(" **** DEVOLUCION ****" in line and contlines>=1 ):
+       continue
+    if("*** A N U L A D A ***" in line and contlines>=1 ):
+       continue
+    if(flag>=2):
+      #print(line)
+      dataLine=line.split("  ")
+      print(dataLine)
+      #print("Producto:"+dataLine[1])
+      #print("Cantidad:"+dataLine[3])
+      #print("prueba 4"+dataLine[4])
+      #print("prueba 5"+dataLine[5])
+      #print("prueba 6"+dataLine[6])
+      fout.write("Producto:"+dataLine[1].strip()+";")
+      fout.write("Cantidad:"+dataLine[3].strip()+";")
+      if(len(dataLine[4])>0):
+         fout.write("Valor Unitario:"+dataLine[4].strip()+";")
+      elif(len(dataLine[5])>0):
+         fout.write("Valor Unitario:"+dataLine[5].strip()+";")
+      elif(len(dataLine[6])>0):
+         fout.write("Valor Unitario:"+dataLine[6]+";")
+      fout.write(fecha)
+      
+      
+    if("FECHA DD/MM/AAAA:" in line):
+        #print(line, end="")
+        fecha=line
+        fout.write(line)
+    elif("========================================================" in line):
+       flag=flag+1
+      
+fout.close()
+
+
+finput = open("output.txt", "r")
+lines = finput.readlines()
+fout2 = open("datacleaned.txt", "a")
+for line in lines:
+   if(line.startswith("FECHA DD/MM/AAAA: ") and len(line)!=29):
+    line=line.replace("Producto:","")
+    line=line.replace("Cantidad:","")
+    line=line.replace("Cantidad: ","")
+    line=line.replace("Valor Unitario:","")
+    line=line.replace(" $","")
+    line=line.replace("$","")
+    line=line.replace(",","")
+    line=line.replace("; ","")
+    line=line.replace("fecha:FECHA DD/MM/AAAA: ","")
+    line=line.replace("FECHA DD/MM/AAAA: ","")
+   fout2.write(line)
+fout2.close()
